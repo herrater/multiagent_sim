@@ -7,13 +7,7 @@ import re
 import pandas as pd
 
 def parse_collisions(output):
-    """
-    Odczytuje ze ściągniętego tekstu stdout:
-      "Liczba kolizji pieszych: X"
-      "Liczba kolizji pojazdów: Y"
-    i zwraca (X, Y) jako dwie liczby całkowite.
-    Zakładamy, że te linie występują dokładnie raz.
-    """
+
     ped_match = re.search(r"Liczba kolizji pieszych:\s*(\d+)", output)
     car_match = re.search(r"Liczba kolizji pojazdów:\s*(\d+)", output)
 
@@ -22,10 +16,7 @@ def parse_collisions(output):
     return int(ped_match.group(1)), int(car_match.group(1))
 
 def run_one(script_path):
-    """
-    Uruchamia podany skrypt Pythona (symulacja) jako podproces,
-    czeka aż się zakończy i zwraca stdout jako string.
-    """
+
     # python3 --unbuffered, aby od razu otrzymywać całe stdout
     proc = subprocess.run(
         ["python3", "-u", script_path],
@@ -34,32 +25,32 @@ def run_one(script_path):
         text=True
     )
     if proc.returncode != 0:
-        # Jeśli skrypt zwrócił błąd, wyrzucamy wyjątek z informacją o stderr
+    
         raise RuntimeError(f"Symulacja zakończona błędem:\n{proc.stderr}")
     return proc.stdout
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Uruchamia n powtórzeń symulacji i zapisuje wyniki kolizji do Excela."
+        
     )
     parser.add_argument(
         "--script",
         "-s",
         required=True,
-        help="Ścieżka do Twojego skryptu symulacji (np. symulacja.py)."
+       
     )
     parser.add_argument(
         "--n",
         "-n",
         type=int,
         default=50,
-        help="Liczba powtórzeń symulacji (domyślnie: 50)."
+        "
     )
     parser.add_argument(
         "--output",
         "-o",
         default="wyniki_symulacji.xlsx",
-        help="Nazwa pliku Excel, do którego zapisać wyniki (domyślnie: wyniki_symulacji.xlsx)."
+        
     )
     args = parser.parse_args()
 
