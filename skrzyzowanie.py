@@ -67,12 +67,12 @@ class Car:
         self.id = Car.car_id_counter
         Car.car_id_counter += 1
 
-        # Decyzja o prawoskręcie (30% szans) i flaga zakończenia skrętu
+      
         self.turn_right_decided = False
         self.turn_right = False
         self.has_turned = False
 
-        # Współrzędne początkowe zgodnie z ruchem prawostronnym:
+  
         if direction == 'N':
             self.x = WIDTH // 2 + 10
             self.y = HEIGHT
@@ -87,7 +87,7 @@ class Car:
             self.y = HEIGHT // 2 - 30
 
     def move(self, light, others, pedestrians):
-        # Decyzja o skręcie w prawo, jeśli jeszcze nie podjęta
+        
         if not self.turn_right_decided:
             self.turn_right_decided = True
             self.turn_right = random.random() < 0.3  # 30% szans na skręt
@@ -95,7 +95,7 @@ class Car:
         stop = False
         OFFSET = 100
 
-        # --- SPRAWDZENIE ŚWIATEŁ (tylko jeśli jeszcze nie minął punktu krytycznego) ---
+  
         if not self.has_turned:
             if self.direction == 'N':
                 light_pos = HEIGHT // 2 + 10 + OFFSET
@@ -291,11 +291,6 @@ def detect_pedestrian_collisions(pedestrians, cars):
 
 
 def detect_car_collisions(cars, active_pairs):
-    """
-    Zwraca (nowe_kolizje, aktualne_pary) gdzie:
-    - nowe_kolizje: liczba par, które właśnie zaczęły się zderzać (wcześniej nie były w active_pairs)
-    - aktualne_pary: zbiór frozenset({id1, id2}) dla wszystkich par kolidujących w tej klatce
-    """
     new_collisions = 0
     current_pairs = set()
 
@@ -376,23 +371,23 @@ def main():
     pedestrians = []
     ped_collision_count = 0
     car_collision_count = 0
-    active_car_pairs = set()  # zestaw aktualnie kolidujących par (frozenset z dwóch IDs)
+    active_car_pairs = set()  
 
     SPAWN_CAR_EVENT = pygame.USEREVENT + 1
     SPAWN_PED_EVENT = pygame.USEREVENT + 2
     pygame.time.set_timer(SPAWN_CAR_EVENT, 1500)
     pygame.time.set_timer(SPAWN_PED_EVENT, 3000)
 
-    start_ticks = pygame.time.get_ticks()  # czas startu w ms
+    start_ticks = pygame.time.get_ticks() 
 
     running = True
     while running:
         clock.tick(FPS)
         light.update()
 
-        # Oblicz czas upłynięty w sekundach
+     
         elapsed_seconds = (pygame.time.get_ticks() - start_ticks) // 1000
-        # Jeśli minęły 2 minuty (120 s), zakończ symulację i wypisz wyniki
+        
         if elapsed_seconds >= 60:
             print("Symulacja zakończona po 60 s.")
             print(f"Liczba kolizji pieszych: {ped_collision_count}")
