@@ -5,12 +5,11 @@ import sys
 # Inicjalizacja Pygame
 pygame.init()
 
-# Ustawienia okna
+
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Symulacja ruchu drogowego")
 
-# Kolory
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -19,17 +18,17 @@ BLUE = (0, 0, 255)
 GRAY = (150, 150, 150)
 YELLOW = (255, 255, 0)
 
-# Parametry
+
 FPS = 60
 LIGHT_CYCLE = 300
 CAR_SIZE = 20
 PEDESTRIAN_SIZE = 10
 
-# Strefa bezpieczeństwa między pieszym a samochodem
+
 SAFETY_BUFFER = 10
 
 
-# Klasy pomocnicze
+
 class TrafficLight:
     def __init__(self):
         self.timer = 0
@@ -296,11 +295,6 @@ def detect_pedestrian_collisions(pedestrians, cars):
 
 
 def detect_car_collisions(cars, active_pairs):
-    """
-    Zwraca (nowe_kolizje, aktualne_pary) gdzie:
-    - nowe_kolizje: liczba par, które właśnie zaczęły się zderzać (wcześniej nie były w active_pairs)
-    - aktualne_pary: zbiór frozenset({id1, id2}) dla wszystkich par kolidujących w tej klatce
-    """
     new_collisions = 0
     current_pairs = set()
 
@@ -381,23 +375,22 @@ def main():
     pedestrians = []
     ped_collision_count = 0
     car_collision_count = 0
-    active_car_pairs = set()  # zestaw aktualnie kolidujących par (frozenset z dwóch IDs)
+    active_car_pairs = set()  
 
     SPAWN_CAR_EVENT = pygame.USEREVENT + 1
     SPAWN_PED_EVENT = pygame.USEREVENT + 2
     pygame.time.set_timer(SPAWN_CAR_EVENT, 1500)
     pygame.time.set_timer(SPAWN_PED_EVENT, 3000)
 
-    start_ticks = pygame.time.get_ticks()  # czas startu w ms
+    start_ticks = pygame.time.get_ticks()  
 
     running = True
     while running:
         clock.tick(FPS)
         light.update()
-
-        # Oblicz czas upłynięty w sekundach
+  
         elapsed_seconds = (pygame.time.get_ticks() - start_ticks) // 1000
-        # Jeśli minęły 2 minuty (120 s), zakończ symulację i wypisz wyniki
+      
         if elapsed_seconds >= 60:
             print("Symulacja zakończona po 120 s.")
             print(f"Liczba kolizji pieszych: {ped_collision_count}")
