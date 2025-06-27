@@ -2,15 +2,15 @@ import pygame
 import random
 import sys
 
-# Inicjalizacja Pygame
+
 pygame.init()
 
-# Ustawienia okna
+
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Symulacja ruchu drogowego")
 
-# Kolory
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -19,13 +19,13 @@ BLUE = (0, 0, 255)
 GRAY = (150, 150, 150)
 YELLOW = (255, 255, 0)
 
-# Parametry
+
 FPS = 60
 LIGHT_CYCLE = 300
 CAR_SIZE = 20
 PEDESTRIAN_SIZE = 10
 
-# Strefa bezpieczeństwa między pieszym a samochodem
+
 SAFETY_BUFFER = 10
 
 
@@ -33,7 +33,7 @@ SAFETY_BUFFER = 10
 class TrafficLight:
     def __init__(self):
         self.timer = 0
-        self.state = 'NS'  # Obecnie zielone dla N–S
+        self.state = 'NS'  
         self.next_state = 'EW'
         self.pedestrian_state = 'NS'
         self.buffer_active = False
@@ -44,7 +44,7 @@ class TrafficLight:
         if self.buffer_active:
             self.buffer_timer += 1
             if self.buffer_timer >= self.BUFFER:
-                # Po trwającym buforze przełączamy na next_state
+
                 self.state = self.next_state
                 self.pedestrian_state = self.next_state
                 self.buffer_active = False
@@ -54,13 +54,13 @@ class TrafficLight:
         self.timer += 1
         if self.timer >= LIGHT_CYCLE:
             self.timer = 0
-            # Aktywujemy bufor zamiast natychmiastowej zmiany
+
             self.buffer_active = True
             self.next_state = 'EW' if self.state == 'NS' else 'NS'
 
     def vehicle_green(self, direction):
         if self.buffer_active:
-            return False  # W czasie bufora każdy kierunek ma czerwone
+            return False  
         if direction in ['N', 'S']:
             return self.state == 'NS'
         else:
@@ -68,7 +68,7 @@ class TrafficLight:
 
     def pedestrian_green(self, crossing):
         if self.buffer_active:
-            return False  # Piesi też czekają podczas bufora
+            return False
         if crossing in ['NS', 'SN']:
             return self.pedestrian_state == 'NS'
         else:
@@ -120,28 +120,28 @@ class Car:
                 if (not self.passed_light) and (self.y <= light_pos) and (not light.vehicle_green('N')):
                     stop = True
                 elif (not self.passed_light) and (self.y < HEIGHT // 2 + 20):
-                    # Przesunięcie linii granicznej z +10 na +20
+                   
                     self.passed_light = True
             elif self.direction == 'S':
                 light_pos = HEIGHT // 2 - 10 - OFFSET
                 if (not self.passed_light) and (self.y + CAR_SIZE >= light_pos) and (not light.vehicle_green('S')):
                     stop = True
                 elif (not self.passed_light) and (self.y + CAR_SIZE > HEIGHT // 2 - 20):
-                    # Przesunięcie linii granicznej z -10 na -20
+                   
                     self.passed_light = True
             elif self.direction == 'E':
                 light_pos = WIDTH // 2 - 10 - OFFSET
                 if (not self.passed_light) and (self.x + CAR_SIZE >= light_pos) and (not light.vehicle_green('E')):
                     stop = True
                 elif (not self.passed_light) and (self.x + CAR_SIZE > WIDTH // 2 - 20):
-                    # Przesunięcie linii granicznej z -10 na -20
+                  
                     self.passed_light = True
             elif self.direction == 'W':
                 light_pos = WIDTH // 2 + 10 + OFFSET
                 if (not self.passed_light) and (self.x <= light_pos) and (not light.vehicle_green('W')):
                     stop = True
                 elif (not self.passed_light) and (self.x < WIDTH // 2 + 20):
-                    # Przesunięcie linii granicznej z +10 na +20
+                  
                     self.passed_light = True
 
         # --- UNIKANIE KOLIZJI Z INNYMI POJAZDAMI jadącymi w tym samym kierunku ---
@@ -175,7 +175,7 @@ class Car:
                 if not self.passed_light:
                     self.y -= self.speed
                 else:
-                    # Po minięciu sygnalizatora skręcamy w prawo: jedziemy na wschód
+                   
                     if self.x < WIDTH // 2 + 60:
                         self.x += self.speed
                     else:
@@ -185,7 +185,7 @@ class Car:
                 if not self.passed_light:
                     self.x += self.speed
                 else:
-                    # Po minięciu sygnalizatora skręcamy w prawo: jedziemy na południe
+                   
                     if self.y < HEIGHT // 2 + 60:
                         self.y += self.speed
                     else:
@@ -195,7 +195,7 @@ class Car:
                 if not self.passed_light:
                     self.y += self.speed
                 else:
-                    # Skręt w prawo: jedziemy na zachód
+               
                     if self.x > WIDTH // 2 - 60:
                         self.x -= self.speed
                     else:
@@ -205,7 +205,7 @@ class Car:
                 if not self.passed_light:
                     self.x -= self.speed
                 else:
-                    # Skręt w prawo: jedziemy na północ
+               
                     if self.y > HEIGHT // 2 - 60:
                         self.y -= self.speed
                     else:
@@ -313,11 +313,7 @@ def detect_pedestrian_collisions(pedestrians, cars):
 
 
 def detect_car_collisions(cars, active_pairs):
-    """
-    Zwraca (nowe_kolizje, aktualne_pary) gdzie:
-    - nowe_kolizje: liczba par, które właśnie zaczęły się zderzać (wcześniej nie były w active_pairs)
-    - aktualne_pary: zbiór frozenset({id1, id2}) dla wszystkich par kolidujących w tej klatce
-    """
+
     new_collisions = 0
     current_pairs = set()
 
@@ -388,13 +384,13 @@ def draw_intersection(win, light, cars, pedestrians, ped_collisions, car_collisi
             pygame.draw.rect(win, GREEN, (WIDTH // 2 - 60, HEIGHT // 2 - 60, 20, 20))
             pygame.draw.rect(win, GREEN, (WIDTH // 2 + 50, HEIGHT // 2 + 50, 20, 20))
 
-    # Rysowanie pojazdów i pieszych
+
     for car in cars:
         car.draw(win)
     for ped in pedestrians:
         ped.draw(win)
 
-    # Wyświetlanie liczników kolizji i czasu
+
     text_ped = font.render(f"Kolizje pieszych: {ped_collisions}", True, BLACK)
     text_car = font.render(f"Kolizje pojazdów: {car_collisions}", True, BLACK)
     text_time = font.render(f"Czas: {elapsed_seconds} s", True, BLACK)
@@ -412,23 +408,23 @@ def main():
     pedestrians = []
     ped_collision_count = 0
     car_collision_count = 0
-    active_car_pairs = set()  # zestaw aktualnie kolidujących par (frozenset z dwóch IDs)
+    active_car_pairs = set()  
 
     SPAWN_CAR_EVENT = pygame.USEREVENT + 1
     SPAWN_PED_EVENT = pygame.USEREVENT + 2
     pygame.time.set_timer(SPAWN_CAR_EVENT, 1500)
     pygame.time.set_timer(SPAWN_PED_EVENT, 3000)
 
-    start_ticks = pygame.time.get_ticks()  # czas startu w ms
+    start_ticks = pygame.time.get_ticks()  
 
     running = True
     while running:
         clock.tick(FPS)
         light.update()
 
-        # Oblicz czas upłynięty w sekundach
+      
         elapsed_seconds = (pygame.time.get_ticks() - start_ticks) // 1000
-        # Jeśli minęły 2 minuty (60 s), zakończ symulację i wypisz wyniki
+        
         if elapsed_seconds >= 60:
             print("Symulacja zakończona po 60 s.")
             print(f"Liczba kolizji pieszych: {ped_collision_count}")
